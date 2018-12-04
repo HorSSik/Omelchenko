@@ -15,7 +15,7 @@ class Employee<Processed: MoneyGiver>: MoneyReceiver, MoneyGiver, Stateable {
         case waitForProcessing
         case available
     }
-    
+    //comment
     var state: State {
         get { return self.atomicState.value }
         set {
