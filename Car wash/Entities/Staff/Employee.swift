@@ -8,8 +8,25 @@
 
 import Foundation
 
-class Employee<Processed: MoneyGiver>: MoneyReceiver, MoneyGiver, Stateable {
-
+class Employee<Processed: MoneyGiver>: MoneyReceiver, MoneyGiver, Stateable, Observeable {
+   
+    func notify() {
+//        self.observers.forEach {
+//            $0.didChange()
+//        }
+    }
+    
+    func addObserver(observer: Observer) {
+//        self.observers.append(observer)
+        
+    }
+    
+    func removeObserver() {
+        print("REMOVE")
+    }
+    
+    var observer: Observer?
+    
     enum State {
         case busy
         case waitForProcessing
@@ -19,14 +36,27 @@ class Employee<Processed: MoneyGiver>: MoneyReceiver, MoneyGiver, Stateable {
     var state: State {
         get { return self.atomicState.value }
         set {
-            self.atomicState.modify {
-                if $0 == .busy && newValue == .waitForProcessing {
-                    self.completionHandler?()
-                }
-                $0 = newValue
+//            self.atomicState.modify {
+            self.atomicState.value = newValue
+            switch newValue {
+            case .waitForProcessing:
+                print("\(type(of: self)) - WAIT")
+                self.observer?.handlingWaitForProcessing(sender: self)
+            case .available:
+                self.observer?.handlingAvailable(sender: self)
+                self.processingQueue.dequeue().do(self.doAsyncWork)
+                print("\(type(of: self)) - Available")
+            case .busy:
+                print("BUSY")
             }
+            self.notify()
+            //            }
         }
     }
+    
+    var stateToBusy: F.CompletionHandler?
+    var stateToWaitForProcessing: F.CompletionHandler?
+    var stateToAvailable: F.CompletionHandler?
     
     var money: Int {
         return self.atomicMoney.value
@@ -38,8 +68,6 @@ class Employee<Processed: MoneyGiver>: MoneyReceiver, MoneyGiver, Stateable {
     
     private let atomicState = Atomic(State.available)
     let name: String
-    var completionHandler: F.CompletionHandler?
-    var eventHandler: F.EventHandler?
 
     private let atomicMoney = Atomic(0)
 
@@ -50,7 +78,6 @@ class Employee<Processed: MoneyGiver>: MoneyReceiver, MoneyGiver, Stateable {
     init(name: String, queue: DispatchQueue) {
         self.name = name
         self.queue = queue
-        self.completionHandler = nil
     }
 
     convenience init(name: String) {
@@ -100,16 +127,7 @@ class Employee<Processed: MoneyGiver>: MoneyReceiver, MoneyGiver, Stateable {
         self.queue.asyncAfter(deadline: .afterRandomInterval(in: range)) {
             self.doWork(with: object)
             self.finishProcessing(with: object)
-            self.eventHandler?()
             self.finishWork()
         }
     }
 }
-
-//    private func workWithProcessingQueue(with object: Processed) {
-//        if let process = self.processingQueue.dequeue() {
-//            self.asyncWork(with: process,execute: execute, completion: completion)
-//        } else {
-//            completion?()
-//        }
-//    }
