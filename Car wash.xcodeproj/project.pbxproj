@@ -27,7 +27,7 @@
 		3F55D4582189E10F000C4707 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F55D4572189E10F000C4707 /* Atomic.swift */; };
 		3F55D45A2189EE6B000C4707 /* NSLocking+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F55D4592189EE6B000C4707 /* NSLocking+Extensions.swift */; };
 		3F5753E2217DB37100ABA958 /* Optional+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F5753E1217DB37100ABA958 /* Optional+Extensions.swift */; };
-		3F5BF31F21B7C4C30067FA95 /* Observeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F5BF31E21B7C4C30067FA95 /* Observeable.swift */; };
+		3F5BF31F21B7C4C30067FA95 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F5BF31E21B7C4C30067FA95 /* Observable.swift */; };
 		3F5BF32121B7C4E90067FA95 /* Observer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F5BF32021B7C4E90067FA95 /* Observer.swift */; };
 		3F5BF32521B7C51D0067FA95 /* WeakObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F5BF32421B7C51D0067FA95 /* WeakObserver.swift */; };
 		3FF548C121874BF00045681B /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FF548C021874BF00045681B /* Queue.swift */; };
@@ -67,7 +67,7 @@
 		3F55D4572189E10F000C4707 /* Atomic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Atomic.swift; sourceTree = "<group>"; };
 		3F55D4592189EE6B000C4707 /* NSLocking+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSLocking+Extensions.swift"; sourceTree = "<group>"; };
 		3F5753E1217DB37100ABA958 /* Optional+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+Extensions.swift"; sourceTree = "<group>"; };
-		3F5BF31E21B7C4C30067FA95 /* Observeable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observeable.swift; sourceTree = "<group>"; };
+		3F5BF31E21B7C4C30067FA95 /* Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		3F5BF32021B7C4E90067FA95 /* Observer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observer.swift; sourceTree = "<group>"; };
 		3F5BF32421B7C51D0067FA95 /* WeakObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakObserver.swift; sourceTree = "<group>"; };
 		3FF548C021874BF00045681B /* Queue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
@@ -137,7 +137,7 @@
 				3F26A5A9217F401E00945E5F /* MoneyReceiver.swift */,
 				3F26A5AB217F403400945E5F /* MoneyGiver.swift */,
 				3F3868EF219331A500EDC616 /* Stateable.swift */,
-				3F5BF31E21B7C4C30067FA95 /* Observeable.swift */,
+				3F5BF31E21B7C4C30067FA95 /* Observable.swift */,
 				3F5BF32021B7C4E90067FA95 /* Observer.swift */,
 			);
 			path = Protocols;
@@ -256,7 +256,7 @@
 				3F4F0D13218305CD00527857 /* Strideable+Extensions.swift in Sources */,
 				3F26A5AC217F403400945E5F /* MoneyGiver.swift in Sources */,
 				3F5753E2217DB37100ABA958 /* Optional+Extensions.swift in Sources */,
-				3F5BF31F21B7C4C30067FA95 /* Observeable.swift in Sources */,
+				3F5BF31F21B7C4C30067FA95 /* Observable.swift in Sources */,
 				3F26A5AA217F401E00945E5F /* MoneyReceiver.swift in Sources */,
 				3F262F372181BD0E00EEC14C /* RangeReplacebleCollection+Extensions.swift in Sources */,
 				3F55D4582189E10F000C4707 /* Atomic.swift in Sources */,

@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Employee<Processed: MoneyGiver>: MoneyReceiver, MoneyGiver, Stateable, Observeable {
+class Employee<Processed: MoneyGiver>: MoneyReceiver, MoneyGiver, Stateable, Observable {
     
     enum State {
         case busy
@@ -22,14 +22,11 @@ class Employee<Processed: MoneyGiver>: MoneyReceiver, MoneyGiver, Stateable, Obs
             for (identifier, observer) in observers {
                 if let observer = observer.value {
                     self.atomicState.value = newValue
-                    switch newValue {
-                    case .waitForProcessing:
-                        observer.handlingWaitForProcessing(sender: self)
-                    case .available:
-                        observer.handlingAvailable(sender: self)
+                    if newValue == .waitForProcessing {
+                        observer.handleWaitForProcessing(sender: self)
+                    } else if newValue == .available {
+                        observer.handleAvailable(sender: self)
                         self.processingQueue.dequeue().do(self.doAsyncWork)
-                    case .busy:
-                        print("BUSY")
                     }
                 } else {
                     self.removeObserver(identifier: identifier)
@@ -48,9 +45,9 @@ class Employee<Processed: MoneyGiver>: MoneyReceiver, MoneyGiver, Stateable, Obs
     
     var observers =  [Int : WeakObserver]()
     
-    private let atomicState = Atomic(State.available)
     let name: String
-
+    
+    private let atomicState = Atomic(State.available)
     private let atomicMoney = Atomic(0)
 
     private let queue: DispatchQueue

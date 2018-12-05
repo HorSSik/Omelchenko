@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol Observeable {
+protocol Observable {
     
     func addObserver(observer: Observer)
     

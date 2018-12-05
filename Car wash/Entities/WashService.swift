@@ -50,7 +50,7 @@ class WashService: Observer {
         self.director.addObserver(observer: self)
     }
     
-    func handlingWaitForProcessing<T>(sender: T) {
+    func handleWaitForProcessing<T>(sender: T) {
         if sender is Accountant {
             self.director.doAsyncWork(with: self.accountant)
         } else if let washer = sender as? Washer {
@@ -58,7 +58,7 @@ class WashService: Observer {
         }
     }
     
-    func handlingAvailable<T>(sender: T) {
+    func handleAvailable<T>(sender: T) {
         if let washer = sender as? Washer {
             self.cars.dequeue().do(washer.doAsyncWork)
         }

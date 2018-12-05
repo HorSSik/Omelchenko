@@ -12,7 +12,7 @@ protocol Observer: class {
     
     var identifier: Int { get set }
     
-    func handlingWaitForProcessing<T>(sender: T)
+    func handleWaitForProcessing<T>(sender: T)
     
-    func handlingAvailable<T>(sender: T)
+    func handleAvailable<T>(sender: T)
 }
