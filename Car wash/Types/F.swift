@@ -10,7 +10,6 @@ import Foundation
 
 enum F {
     
-    typealias CompletionHandler = () -> ()
-    typealias EventHandler = () -> ()
+    typealias Completion = () -> ()
     typealias Execute = () -> ()
 }

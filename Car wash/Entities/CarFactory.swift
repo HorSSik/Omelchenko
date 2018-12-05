@@ -10,10 +10,10 @@ import Foundation
 
 class CarFactory {
     
-    var isRunning: Bool {
-        return self.token?.isRunning ?? false
+    var isRunning: Bool? {
+        return self.token?.isRunning
     }
-    
+
     private let carCount = 10
     
     private let service: WashService

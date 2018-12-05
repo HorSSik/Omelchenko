@@ -16,15 +16,19 @@ class WashService: Observer {
     private let cars = Queue<Car>()
     private let washers: Atomic<[Washer]>
     
+    var identifier: Int
+    
     init(
         washers: [Washer],
         accountant: Accountant,
-        director: Director
+        director: Director,
+        identifier: Int
     ) {
         self.washers = Atomic(washers)
         self.accountant = accountant
-        self.director = director        
-        self.setCompletion()
+        self.director = director
+        self.identifier = identifier
+        self.subscribe()
     }
     
     func wash(_ car: Car) {
@@ -38,23 +42,12 @@ class WashService: Observer {
         }
     }
     
-    private func setCompletion() {
+    private func subscribe() {
         self.washers.value.forEach { washer in
-            washer.observer = self
-//            washer.stateToWaitForProcessing = {
-//                self.accountant.doAsyncWork(with: washer)
-//            }
-//            washer.stateToAvailable = {
-//                self.cars.dequeue().do(washer.doAsyncWork)
-//            }
+            washer.addObserver(observer: self)
         }
-        
-        self.accountant.observer = self
-        self.director.observer = self
-
-//        self.accountant.stateToWaitForProcessing = {
-//            self.director.doAsyncWork(with: self.accountant)
-//        }
+        self.accountant.addObserver(observer: self)
+        self.director.addObserver(observer: self)
     }
     
     func handlingWaitForProcessing<T>(sender: T) {
@@ -70,27 +63,4 @@ class WashService: Observer {
             self.cars.dequeue().do(washer.doAsyncWork)
         }
     }
-    
-    func didChange() {
-        print("DID CHANGE")
-    }
-}
-
-protocol Observeable {
-    
-    func addObserver(observer: Observer)
-    
-    func removeObserver()
-    
-    func notify()
-}
-
-protocol Observer {
-    
-    func didChange()
-    
-    func handlingWaitForProcessing<T>(sender: T)
-    
-    func handlingAvailable<T>(sender: T)
-    
 }

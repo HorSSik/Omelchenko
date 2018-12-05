@@ -16,13 +16,14 @@ let washers = ["Fedor", "Ivan", "Vova", "Jeck"].map(Washer.init)
 let washService = WashService(
     washers: washers,
     accountant: accountant,
-    director: director
+    director: director,
+    identifier: 1
 )
 
 var factory = CarFactory(for: washService, interval: 5.0, queue: .background)
 
 factory.start()
-sleep(7)
-factory.stop()
+//sleep(7)
+//factory.stop()
 
 RunLoop.current.run()
