@@ -29,7 +29,7 @@ class Employee<Processed: MoneyGiver>: MoneyReceiver, MoneyGiver, Stateable, Obs
                         self.processingQueue.dequeue().do(self.doAsyncWork)
                     }
                 } else {
-                    self.removeObserver(identifier: identifier)
+                    self.removeObserver(forIdentifier: identifier)
                 }
             }
         }
@@ -110,12 +110,12 @@ class Employee<Processed: MoneyGiver>: MoneyReceiver, MoneyGiver, Stateable, Obs
         }
     }
     
-    func addObserver(observer: Observer) {
+    func addObserver(_ observer: Observer) {
         let weakObserver = WeakObserver(value: observer)
         self.observers.updateValue(weakObserver, forKey: observer.identifier)
     }
     
-    func removeObserver(identifier: Int) {
-        self.observers.removeValue(forKey: identifier)
+    func removeObserver(forIdentifier: Int) {
+        self.observers.removeValue(forKey: forIdentifier)
     }
 }

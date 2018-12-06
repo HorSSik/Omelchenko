@@ -10,7 +10,7 @@ import Foundation
 
 protocol Observable {
     
-    func addObserver(observer: Observer)
+    func addObserver(_ observer: Observer)
     
-    func removeObserver(identifier: Int)
+    func removeObserver(forIdentifier: Int)
 }

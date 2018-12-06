@@ -10,13 +10,13 @@ import Foundation
 
 class WashService: Observer {
     
+    var identifier: Int
+    
     private let accountant: Accountant
     private let director: Director
     
     private let cars = Queue<Car>()
     private let washers: Atomic<[Washer]>
-    
-    var identifier: Int
     
     init(
         washers: [Washer],
@@ -44,13 +44,13 @@ class WashService: Observer {
     
     private func subscribe() {
         self.washers.value.forEach { washer in
-            washer.addObserver(observer: self)
+            washer.addObserver(self)
         }
-        self.accountant.addObserver(observer: self)
-        self.director.addObserver(observer: self)
+        self.accountant.addObserver(self)
+        self.director.addObserver(self)
     }
     
-    func handleWaitForProcessing<T>(sender: T) {
+    func handleWaitForProcessing<Observable>(sender: Observable) {
         if sender is Accountant {
             self.director.doAsyncWork(with: self.accountant)
         } else if let washer = sender as? Washer {
@@ -58,7 +58,7 @@ class WashService: Observer {
         }
     }
     
-    func handleAvailable<T>(sender: T) {
+    func handleAvailable<Observable>(sender: Observable) {
         if let washer = sender as? Washer {
             self.cars.dequeue().do(washer.doAsyncWork)
         }

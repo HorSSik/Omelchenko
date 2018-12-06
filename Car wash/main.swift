@@ -11,7 +11,7 @@ import Foundation
 let accountant = Accountant(name: "Vlad", queue: .background)
 let director = Director(name: "Dima", queue: .background)
 
-let washers = ["Fedor", "Ivan", "Vova", "Jeck"].map(Washer.init)
+let washers = ["Fedor", "Ivan", "Petro", "Jeck"].map(Washer.init)
 
 let washService = WashService(
     washers: washers,
