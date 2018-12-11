@@ -32,14 +32,3 @@ class Queue<Element> {
         }
     }
 }
-
-
-
-
-//    init(elements: [Element]) {
-//        self.elements = Atomic(elements)
-//    }
-//
-//    convenience init() {
-//        self.init(elements: [Element]())
-//    }

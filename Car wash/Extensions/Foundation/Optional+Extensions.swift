@@ -13,4 +13,10 @@ extension Optional {
     func `do`(_ action: (Wrapped) -> ()) {
         self.map(action)
     }
+    
+    func apply<Result>(_ transform: ((Wrapped) -> Result)?) -> Result? {
+        return self.flatMap {
+            transform?($0)
+        }
+    }
 }
