@@ -8,7 +8,46 @@
 
 import Foundation
 
-class Employee<Processed: MoneyGiver>: MoneyReceiver, MoneyGiver, Stateable, Observable {
+class Employee<Processed: MoneyGiver>: MoneyReceiver, MoneyGiver, Stateable {
+    
+    class StateObserver {
+        
+        var isObserving: Bool {
+            return self.sender != nil
+        }
+        
+        typealias Handler = (State) -> ()
+        
+        weak var sender: Employee?
+        var handler: Handler
+        
+        init(handler: @escaping Handler, sender: Employee?) {
+            self.handler = handler
+            self.sender = sender
+        }
+    }
+    
+    class ObserverCollection {
+        
+        var observers = Atomic([StateObserver]())
+        
+        func add(observer: StateObserver) {
+            self.observers.modify {
+                $0.append(observer)
+            }
+        }
+        
+        func notify(state: State) {
+            self.observers.modify {
+                $0 = $0.filter {
+                    $0.isObserving
+                }
+                $0.forEach {
+                    $0.handler(state)
+                }
+            }
+        }
+    }
     
     enum State {
         case busy
@@ -16,22 +55,17 @@ class Employee<Processed: MoneyGiver>: MoneyReceiver, MoneyGiver, Stateable, Obs
         case available
     }
     
+    func observer(handler: @escaping StateObserver.Handler) {
+        let observer = StateObserver(handler: handler, sender: self)
+        self.observers.add(observer: observer)
+    }
+    
     var state: State {
         get { return self.atomicState.value }
         set {
-            for (identifier, observer) in observers {
-                if let observer = observer.value {
-                    self.atomicState.value = newValue
-                    if newValue == .waitForProcessing {
-                        observer.handleWaitForProcessing(sender: self)
-                    } else if newValue == .available {
-                        observer.handleAvailable(sender: self)
-                        self.processingQueue.dequeue().do(self.doAsyncWork)
-                    }
-                } else {
-                    self.removeObserver(forIdentifier: identifier)
-                }
-            }
+            guard self.state != newValue else { return }
+            self.atomicState.value = newValue
+            self.observers.notify(state: newValue)
         }
     }
 
@@ -42,8 +76,8 @@ class Employee<Processed: MoneyGiver>: MoneyReceiver, MoneyGiver, Stateable, Obs
     var elementsCountInQueue: Int {
         return self.processingQueue.count
     }
-    
-    var observers =  [Int : WeakObserver]()
+
+    let observers = ObserverCollection()
     
     let name: String
     
@@ -108,14 +142,5 @@ class Employee<Processed: MoneyGiver>: MoneyReceiver, MoneyGiver, Stateable, Obs
             self.finishProcessing(with: object)
             self.finishWork()
         }
-    }
-    
-    func addObserver(_ observer: Observer) {
-        let weakObserver = WeakObserver(value: observer)
-        self.observers.updateValue(weakObserver, forKey: observer.identifier)
-    }
-    
-    func removeObserver(forIdentifier: Int) {
-        self.observers.removeValue(forKey: forIdentifier)
     }
 }

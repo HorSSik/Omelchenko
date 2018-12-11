@@ -16,8 +16,7 @@ let washers = ["Fedor", "Ivan", "Petro", "Jeck"].map(Washer.init)
 let washService = WashService(
     washers: washers,
     accountant: accountant,
-    director: director,
-    identifier: 1
+    director: director
 )
 
 var factory = CarFactory(for: washService, interval: 5.0, queue: .background)

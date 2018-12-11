@@ -8,9 +8,7 @@
 
 import Foundation
 
-class WashService: Observer {
-    
-    var identifier: Int
+class WashService {
     
     private let accountant: Accountant
     private let director: Director
@@ -21,13 +19,11 @@ class WashService: Observer {
     init(
         washers: [Washer],
         accountant: Accountant,
-        director: Director,
-        identifier: Int
+        director: Director
     ) {
         self.washers = Atomic(washers)
         self.accountant = accountant
         self.director = director
-        self.identifier = identifier
         self.subscribe()
     }
     
@@ -44,23 +40,32 @@ class WashService: Observer {
     
     private func subscribe() {
         self.washers.value.forEach { washer in
-            washer.addObserver(self)
+            washer.observer {
+                switch $0 {
+                case .available:
+                    self.cars.dequeue().do(washer.doAsyncWork)
+                case .waitForProcessing:
+                    self.accountant.doAsyncWork(with: washer)
+                case .busy:
+                    return
+                }
+            }
         }
-        self.accountant.addObserver(self)
-        self.director.addObserver(self)
-    }
-    
-    func handleWaitForProcessing<Observable>(sender: Observable) {
-        if sender is Accountant {
-            self.director.doAsyncWork(with: self.accountant)
-        } else if let washer = sender as? Washer {
-            self.accountant.doAsyncWork(with: washer)
+        
+        self.accountant.observer {
+            switch $0 {
+            case .waitForProcessing:
+                self.director.doAsyncWork(with: self.accountant)
+            default: return
+            }
         }
-    }
-    
-    func handleAvailable<Observable>(sender: Observable) {
-        if let washer = sender as? Washer {
-            self.cars.dequeue().do(washer.doAsyncWork)
+        
+        self.director.observer {
+            switch $0 {
+            case .available: print("Director - Available")
+            case .waitForProcessing: print("Director - WaitForProcessing")
+            case .busy: print("Director - Busy")
+            }
         }
     }
 }
