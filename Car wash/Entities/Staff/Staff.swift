@@ -48,8 +48,10 @@ class Staff: Stateable, MoneyGiver, MoneyReceiver {
         }
     }
     
-    func observer(handler: @escaping StateObserver.Handler) {
+    func observer(handler: @escaping StateObserver.Handler) -> StateObserver {
         let observer = StateObserver(handler: handler, sender: self)
         self.observers.add(observer: observer)
+        
+        return observer
     }
 }

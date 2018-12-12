@@ -144,9 +144,9 @@
 			isa = PBXGroup;
 			children = (
 				3F78345421BFF351008E93E6 /* WashService.swift */,
+				3F3868ED2192D05600EDC616 /* CarFactory.swift */,
 				3F78345021BFF2F6008E93E6 /* StateObserver.swift */,
 				3F78345221BFF30B008E93E6 /* ObserverCollection.swift */,
-				3F3868ED2192D05600EDC616 /* CarFactory.swift */,
 				3F3A169321B12657003191E4 /* Client */,
 				3F3026DE21958D650087B927 /* Staff */,
 			);

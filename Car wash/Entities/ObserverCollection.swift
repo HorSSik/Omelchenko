@@ -10,7 +10,7 @@ import Foundation
 
 class ObserverCollection {
     
-    var observers = Atomic([StateObserver]())
+    let observers = Atomic([StateObserver]())
     
     func add(observer: StateObserver) {
         self.observers.modify {

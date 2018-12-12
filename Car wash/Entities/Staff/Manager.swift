@@ -16,10 +16,6 @@ class Manager<Processed: MoneyGiver & Stateable>: Employee<Processed> {
     
     override func finishProcessing(with object: Processed) {
         object.state = .available
-        if self.elementsCountInQueue != 0 {
-            super.finishWork()
-        } else {
-            self.state = .waitForProcessing
-        }
+        super.finishWork()
     }
 }

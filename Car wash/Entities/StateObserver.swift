@@ -8,7 +8,7 @@
 
 import Foundation
 
-class StateObserver {
+class StateObserver: Hashable {
     
     var isObserving: Bool {
         return self.sender != nil
@@ -16,11 +16,23 @@ class StateObserver {
     
     typealias Handler = (Staff.State) -> ()
     
-    weak var sender: Staff?
+    private weak var sender: Staff?
     let handler: Handler
     
     init(handler: @escaping Handler, sender: Staff?) {
         self.handler = handler
         self.sender = sender
+    }
+    
+    var hashValue: Int {
+        return ObjectIdentifier(self).hashValue
+    }
+    
+    static func == (lhs: StateObserver, rhs: StateObserver) -> Bool {
+        return lhs === rhs
+    }
+    
+    func cancel() {
+        self.sender = nil
     }
 }

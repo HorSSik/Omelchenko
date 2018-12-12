@@ -15,6 +15,14 @@ class WashService {
     
     private let cars = Queue<Car>()
     private let washers: Atomic<[Washer]>
+    private var observers = [StateObserver]()
+    
+    deinit {
+        print("DEINIT")
+        self.observers.forEach {
+            $0.cancel()
+        }
+    }
     
     init(
         washers: [Washer],
@@ -40,29 +48,32 @@ class WashService {
     
     private func subscribe() {
         self.washers.value.forEach { washer in
-            washer.observer {
+            let observerWasher = washer.observer { [weak self, weak washer] in
                 switch $0 {
-                case .available: self.cars.dequeue().do(washer.doAsyncWork)
-                case .waitForProcessing: self.accountant.doAsyncWork(with: washer)
+                case .available: self?.cars.dequeue().apply(washer?.doAsyncWork)
+                case .waitForProcessing: washer.apply(self?.accountant.doAsyncWork)
                 case .busy: return
                 }
             }
+            self.observers.append(observerWasher)
         }
         
-        self.accountant.observer {
+        let observerAccountant = self.accountant.observer { [weak self, weak accountant] in
             switch $0 {
-            case .waitForProcessing: self.director.doAsyncWork(with: self.accountant)
-            case .available: self.accountant.checkProcessingQueue()
+            case .waitForProcessing: accountant.apply(self?.director.doAsyncWork)
+            case .available: accountant?.checkProcessingQueue()
             case .busy: print("Accountant - Busy")
             }
         }
+        self.observers.append(observerAccountant)
         
-        self.director.observer {
+        let observerDirector = self.director.observer {
             switch $0 {
             case .available: print("Director - Available")
             case .waitForProcessing: print("Director - WaitForProcessing")
             case .busy: print("Director - Busy")
             }
         }
+        self.observers.append(observerDirector)
     }
 }
