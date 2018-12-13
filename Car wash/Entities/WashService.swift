@@ -48,29 +48,6 @@ class WashService {
     
     private func subscribe() {
         self.washers.value.forEach { washer in
-<<<<<<< HEAD
-            washer.observer {
-                switch $0 {
-                case .available:
-                    self.cars.dequeue().do(washer.doAsyncWork)
-                case .waitForProcessing:
-                    self.accountant.doAsyncWork(with: washer)
-                case .busy:
-                    return
-                }
-            }
-        }
-        
-        self.accountant.observer {
-            switch $0 {
-            case .waitForProcessing:
-                self.director.doAsyncWork(with: self.accountant)
-            default: return
-            }
-        }
-        
-        self.director.observer {
-=======
             let observerWasher = washer.observer { [weak self, weak washer] in
                 switch $0 {
                 case .available: self?.cars.dequeue().apply(washer?.doAsyncWork)
@@ -91,7 +68,6 @@ class WashService {
         self.observers.append(observerAccountant)
         
         let observerDirector = self.director.observer {
->>>>>>> feature/observer
             switch $0 {
             case .available: print("Director - Available")
             case .waitForProcessing: print("Director - WaitForProcessing")
