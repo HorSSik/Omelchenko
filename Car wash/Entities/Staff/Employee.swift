@@ -8,6 +8,7 @@
 
 import Foundation
 
+<<<<<<< HEAD
 class Employee<Processed: MoneyGiver>: MoneyReceiver, MoneyGiver, Stateable {
     
     class StateObserver {
@@ -72,17 +73,20 @@ class Employee<Processed: MoneyGiver>: MoneyReceiver, MoneyGiver, Stateable {
     var money: Int {
         return self.atomicMoney.value
     }
+=======
+class Employee<Processed: MoneyGiver>: Staff {
+>>>>>>> feature/observer
     
     var elementsCountInQueue: Int {
         return self.processingQueue.count
     }
 
+<<<<<<< HEAD
     let observers = ObserverCollection()
     
+=======
+>>>>>>> feature/observer
     let name: String
-    
-    private let atomicState = Atomic(State.available)
-    private let atomicMoney = Atomic(0)
 
     private let queue: DispatchQueue
     private let range = 0.1..<1.0
@@ -97,20 +101,6 @@ class Employee<Processed: MoneyGiver>: MoneyReceiver, MoneyGiver, Stateable {
         self.init(name: name, queue: .background)
     }
 
-    func receive(money: Int) {
-        self.atomicMoney.modify {
-            $0 += money
-        }
-    }
-
-    func giveMoney() -> Int {
-        return self.atomicMoney.modify { money in
-            defer { money = 0 }
-
-            return money
-        }
-    }
-
     func doWork(with object: Processed) {
 
     }
@@ -118,11 +108,17 @@ class Employee<Processed: MoneyGiver>: MoneyReceiver, MoneyGiver, Stateable {
     func finishProcessing(with object: Processed) {
         
     }
-
+    
     func finishWork() {
         if let person = self.processingQueue.dequeue() {
             self.asyncWork(with: person)
+        } else {
+            self.state = .waitForProcessing
         }
+    }
+    
+    func checkProcessingQueue() {
+        self.processingQueue.dequeue().do(self.doAsyncWork)
     }
     
     func doAsyncWork(with object: Processed) {
