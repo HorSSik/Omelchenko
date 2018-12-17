@@ -10,6 +10,13 @@ import Foundation
 
 extension DispatchQueue {
     
+    static var userInteractive = DispatchQueue.global(qos: .userInteractive)
+    static var userInitiated = DispatchQueue.global(qos: .userInitiated)
+    static var unspecified = DispatchQueue.global(qos: .unspecified)
+    static var background = DispatchQueue.global(qos: .background)
+    static var `default` = DispatchQueue.global(qos: .default)
+    static var utility = DispatchQueue.global(qos: .utility)
+    
     class CancellationToken {
         
         let atomicToken = Atomic(true)
@@ -22,13 +29,6 @@ extension DispatchQueue {
             self.atomicToken.value = false
         }
     }
-    
-    static var userInteractive = DispatchQueue.global(qos: .userInteractive)
-    static var userInitiated = DispatchQueue.global(qos: .userInitiated)
-    static var unspecified = DispatchQueue.global(qos: .unspecified)
-    static var background = DispatchQueue.global(qos: .background)
-    static var `default` = DispatchQueue.global(qos: .default)
-    static var utility = DispatchQueue.global(qos: .utility)
     
     func timer(
         interval: TimeInterval,

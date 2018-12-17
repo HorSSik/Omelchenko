@@ -15,14 +15,7 @@ class WashService {
     
     private let cars = Queue<Car>()
     private let washers: Atomic<[Washer]>
-    private var observers = [StateObserver]()
-    
-    deinit {
-        print("DEINIT")
-        self.observers.forEach {
-            $0.cancel()
-        }
-    }
+    private var observers = Staff.Observers()
     
     init(
         washers: [Washer],
@@ -47,33 +40,51 @@ class WashService {
     }
     
     private func subscribe() {
-        self.washers.value.forEach { washer in
-            let observerWasher = washer.observer { [weak self, weak washer] in
+        self.observers += self.washers.value.map { washer in
+            let observers = washer.observer { [weak self, weak washer] in
                 switch $0 {
-                case .available: self?.cars.dequeue().apply(washer?.doAsyncWork)
-                case .waitForProcessing: washer.apply(self?.accountant.doAsyncWork)
+                case .available:
+                    self?.asyncSubscribe {
+                        self?.cars.dequeue().apply(washer?.doAsyncWork)
+                    }
+                case .waitForProcessing:
+                    self?.asyncSubscribe {
+                        washer.apply(self?.accountant.doAsyncWork)
+                    }
                 case .busy: return
                 }
             }
-            self.observers.append(observerWasher)
+            
+            return observers
         }
         
         let observerAccountant = self.accountant.observer { [weak self, weak accountant] in
             switch $0 {
-            case .waitForProcessing: accountant.apply(self?.director.doAsyncWork)
-            case .available: accountant?.checkProcessingQueue()
-            case .busy: print("Accountant - Busy")
+            case .waitForProcessing:
+                self?.asyncSubscribe {
+                    accountant.apply(self?.director.doAsyncWork)
+                }
+            case .available: return
+            case .busy: return
             }
         }
-        self.observers.append(observerAccountant)
+        
+        self.observers.add(observer: observerAccountant)
         
         let observerDirector = self.director.observer {
             switch $0 {
-            case .available: print("Director - Available")
-            case .waitForProcessing: print("Director - WaitForProcessing")
-            case .busy: print("Director - Busy")
+            case .available: return
+            case .waitForProcessing: return
+            case .busy: return
             }
         }
-        self.observers.append(observerDirector)
+        
+        self.observers.add(observer: observerDirector)
+    }
+    
+    private func asyncSubscribe(completion: @escaping F.Completion) {
+        DispatchQueue.background.async {
+            completion()
+        }
     }
 }

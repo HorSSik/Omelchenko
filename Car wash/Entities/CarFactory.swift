@@ -25,7 +25,6 @@ class CarFactory {
     
     deinit {
         print("deinit - CarFactory")
-        self.token?.cancel()
         self.stop()
     }
     

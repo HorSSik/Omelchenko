@@ -10,6 +10,22 @@ import Foundation
 
 class Employee<Processed: MoneyGiver>: Staff {
     
+    override var state: State {
+        get { return self.atomicState.value }
+        set {
+            self.atomicState.modify {
+                guard $0 != newValue else { return }
+                if newValue == .available && !self.processingQueue.isEmpty {
+                    $0 = .busy
+                    self.processingQueue.dequeue().do(self.asyncWork)
+                } else {
+                    $0 = newValue
+                    self.observers.notify(state: newValue)
+                }
+            }
+        }
+    }
+    
     var elementsCountInQueue: Int {
         return self.processingQueue.count
     }
@@ -43,10 +59,6 @@ class Employee<Processed: MoneyGiver>: Staff {
         } else {
             self.state = .waitForProcessing
         }
-    }
-    
-    func checkProcessingQueue() {
-        self.processingQueue.dequeue().do(self.doAsyncWork)
     }
     
     func doAsyncWork(with object: Processed) {
