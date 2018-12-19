@@ -10,12 +10,16 @@ import Foundation
 
 class ObservableObject<Value> {
     
-    let observers = ObservableObject.Observers()
+    private let observers = ObservableObject.Observers()
     
-    func observer(handler: @escaping Observer.Handler) -> Observer {
+    public func observer(handler: @escaping Observer.Handler) -> Observer {
         let observer = Observer(sender: self, handler: handler)
         self.observers.add(observer: observer)
         
         return observer
+    }
+    
+    public func notify(_ state: Value) {
+        self.observers.notify(state: state)
     }
 }

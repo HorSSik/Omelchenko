@@ -20,13 +20,13 @@ class Employee<Processed: MoneyGiver>: Staff {
                     self.processingQueue.dequeue().do(self.asyncWork)
                 } else {
                     $0 = newValue
-                    self.observers.notify(state: newValue)
+                    self.notify(newValue)
                 }
             }
         }
     }
     
-    var elementsCountInQueue: Int {
+    private var elementsCountInQueue: Int {
         return self.processingQueue.count
     }
 
@@ -54,10 +54,13 @@ class Employee<Processed: MoneyGiver>: Staff {
     }
     
     func finishWork() {
-        if let person = self.processingQueue.dequeue() {
-            self.asyncWork(with: person)
-        } else {
-            self.state = .waitForProcessing
+        self.atomicState.modify{
+            if let person = self.processingQueue.dequeue() {
+                self.asyncWork(with: person)
+            } else {
+                $0 = .waitForProcessing
+                self.notify($0)
+            }
         }
     }
     

@@ -30,41 +30,12 @@ extension ObservableObject {
             return ObjectIdentifier(self).hashValue
         }
         
-        static func == (lhs: Observer, rhs: Observer) -> Bool {
+        public static func == (lhs: Observer, rhs: Observer) -> Bool {
             return lhs === rhs
         }
         
-        func cancel() {
+        public func cancel() {
             self.sender = nil
-        }
-    }
-}
-
-extension ObservableObject {
-    
-    class Observers {
-        
-        let observers = Atomic([Observer]())
-        
-        func add(observer: Observer) {
-            self.observers.modify {
-                $0.append(observer)
-            }
-        }
-        
-        func notify(state: Value) {
-            self.observers.modify {
-                $0 = $0.filter {
-                    $0.isObserving
-                }
-                $0.forEach {
-                    $0.handler(state)
-                }
-            }
-        }
-        
-        static func += (lhs: Observers, rhs: [Observer]) {
-            lhs.observers.modify { $0 += rhs }
         }
     }
 }

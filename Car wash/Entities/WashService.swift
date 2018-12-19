@@ -41,41 +41,41 @@ class WashService {
     
     private func subscribe() {
         self.observers += self.washers.value.map { washer in
-            let observers = washer.observer { [weak self, weak washer] in
-                switch $0 {
-                case .available:
-                    self?.asyncSubscribe {
+            let observers = washer.observer { [weak self, weak washer] state in
+                self?.asyncSubscribe {
+                    switch state {
+                    case .available:
                         self?.cars.dequeue().apply(washer?.doAsyncWork)
-                    }
-                case .waitForProcessing:
-                    self?.asyncSubscribe {
+                    case .waitForProcessing:
                         washer.apply(self?.accountant.doAsyncWork)
+                    case .busy: return
                     }
-                case .busy: return
                 }
             }
             
             return observers
         }
         
-        let observerAccountant = self.accountant.observer { [weak self, weak accountant] in
-            switch $0 {
-            case .waitForProcessing:
-                self?.asyncSubscribe {
+        let observerAccountant = self.accountant.observer { [weak self, weak accountant] state in
+            self?.asyncSubscribe {
+                switch state {
+                case .waitForProcessing:
                     accountant.apply(self?.director.doAsyncWork)
+                case .available: return
+                case .busy: return
                 }
-            case .available: return
-            case .busy: return
             }
         }
         
         self.observers.add(observer: observerAccountant)
         
-        let observerDirector = self.director.observer {
-            switch $0 {
-            case .available: return
-            case .waitForProcessing: return
-            case .busy: return
+        let observerDirector = self.director.observer { state in
+            self.asyncSubscribe {
+                switch state {
+                case .available: return
+                case .waitForProcessing: return
+                case .busy: return
+                }
             }
         }
         
