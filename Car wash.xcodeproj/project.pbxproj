@@ -21,6 +21,8 @@
 		3F36C34F21805838003B8D55 /* DispatchTime+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F36C34E21805838003B8D55 /* DispatchTime+Extensions.swift */; };
 		3F3868EE2192D05600EDC616 /* CarFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F3868ED2192D05600EDC616 /* CarFactory.swift */; };
 		3F3961A0219ABD2700305210 /* Manager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F39619F219ABD2700305210 /* Manager.swift */; };
+		3F3AF1DA21CB8305006E8B28 /* StaffManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F3AF1D921CB8305006E8B28 /* StaffManager.swift */; };
+		3F3AF1DC21CB8382006E8B28 /* Processable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F3AF1DB21CB8382006E8B28 /* Processable.swift */; };
 		3F497CBD21CA87E100AE70FD /* ObservableObject.Observers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F497CBC21CA87E100AE70FD /* ObservableObject.Observers.swift */; };
 		3F497CBF21CA889800AE70FD /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F497CBE21CA889800AE70FD /* main.swift */; };
 		3F4F0D13218305CD00527857 /* Strideable+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4F0D12218305CD00527857 /* Strideable+Extensions.swift */; };
@@ -62,6 +64,8 @@
 		3F36C34E21805838003B8D55 /* DispatchTime+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchTime+Extensions.swift"; sourceTree = "<group>"; };
 		3F3868ED2192D05600EDC616 /* CarFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarFactory.swift; sourceTree = "<group>"; };
 		3F39619F219ABD2700305210 /* Manager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Manager.swift; sourceTree = "<group>"; };
+		3F3AF1D921CB8305006E8B28 /* StaffManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaffManager.swift; sourceTree = "<group>"; };
+		3F3AF1DB21CB8382006E8B28 /* Processable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Processable.swift; sourceTree = "<group>"; };
 		3F497CBC21CA87E100AE70FD /* ObservableObject.Observers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableObject.Observers.swift; sourceTree = "<group>"; };
 		3F497CBE21CA889800AE70FD /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		3F4F0D12218305CD00527857 /* Strideable+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Strideable+Extensions.swift"; sourceTree = "<group>"; };
@@ -141,6 +145,7 @@
 				3F26A5A9217F401E00945E5F /* MoneyReceiver.swift */,
 				3F26A5AB217F403400945E5F /* MoneyGiver.swift */,
 				3F78345A21BFF39F008E93E6 /* Stateable.swift */,
+				3F3AF1DB21CB8382006E8B28 /* Processable.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -148,6 +153,7 @@
 		3F274A872179C40F0053516C /* Entities */ = {
 			isa = PBXGroup;
 			children = (
+				3F3AF1D921CB8305006E8B28 /* StaffManager.swift */,
 				3F78345421BFF351008E93E6 /* WashService.swift */,
 				3F3868ED2192D05600EDC616 /* CarFactory.swift */,
 				3F3A169321B12657003191E4 /* Client */,
@@ -254,6 +260,7 @@
 				3F5753E2217DB37100ABA958 /* Optional+Extensions.swift in Sources */,
 				3F26A5AA217F401E00945E5F /* MoneyReceiver.swift in Sources */,
 				3F78345521BFF351008E93E6 /* WashService.swift in Sources */,
+				3F3AF1DC21CB8382006E8B28 /* Processable.swift in Sources */,
 				3F262F372181BD0E00EEC14C /* RangeReplacebleCollection+Extensions.swift in Sources */,
 				3F55D4582189E10F000C4707 /* Atomic.swift in Sources */,
 				3F78345821BFF374008E93E6 /* Employee.swift in Sources */,
@@ -271,6 +278,7 @@
 				3F274A792179BF870053516C /* Accountant.swift in Sources */,
 				3F274A7D2179C0970053516C /* Car.swift in Sources */,
 				3FF548C121874BF00045681B /* Queue.swift in Sources */,
+				3F3AF1DA21CB8305006E8B28 /* StaffManager.swift in Sources */,
 				3F55D45A2189EE6B000C4707 /* NSLocking+Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

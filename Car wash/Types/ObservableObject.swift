@@ -12,6 +12,7 @@ class ObservableObject<Value> {
     
     private let observers = ObservableObject.Observers()
     
+    @discardableResult
     public func observer(handler: @escaping Observer.Handler) -> Observer {
         let observer = Observer(sender: self, handler: handler)
         self.observers.add(observer: observer)

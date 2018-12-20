@@ -10,81 +10,29 @@ import Foundation
 
 class WashService {
     
-    private let accountant: Accountant
-    private let director: Director
+    private let managerWashers: StaffManager<Car, Washer>
+    private let managerAccountant: StaffManager<Washer, Accountant>
+    private let managerDirector: StaffManager<Accountant, Director>
     
     private let cars = Queue<Car>()
-    private let washers: Atomic<[Washer]>
-    private var observers = Staff.Observers()
     
     init(
         washers: [Washer],
         accountant: Accountant,
         director: Director
     ) {
-        self.washers = Atomic(washers)
-        self.accountant = accountant
-        self.director = director
+        self.managerWashers = StaffManager(objects: washers)
+        self.managerAccountant = StaffManager(object: accountant)
+        self.managerDirector = StaffManager(object: director)
         self.subscribe()
     }
     
     func wash(_ car: Car) {
-        self.washers.transform {
-            let availableWasher = $0.first { $0.state == .available }
-            if let washer = availableWasher {
-                washer.doAsyncWork(with: car)
-            } else {
-                self.cars.enqueue(car)
-            }
-        }
+        self.managerWashers.processObject(car)
     }
     
-    private func subscribe() {
-        self.observers += self.washers.value.map { washer in
-            let observers = washer.observer { [weak self, weak washer] state in
-                self?.asyncSubscribe {
-                    switch state {
-                    case .available:
-                        self?.cars.dequeue().apply(washer?.doAsyncWork)
-                    case .waitForProcessing:
-                        washer.apply(self?.accountant.doAsyncWork)
-                    case .busy: return
-                    }
-                }
-            }
-            
-            return observers
-        }
-        
-        let observerAccountant = self.accountant.observer { [weak self, weak accountant] state in
-            self?.asyncSubscribe {
-                switch state {
-                case .waitForProcessing:
-                    accountant.apply(self?.director.doAsyncWork)
-                case .available: return
-                case .busy: return
-                }
-            }
-        }
-        
-        self.observers.add(observer: observerAccountant)
-        
-        let observerDirector = self.director.observer { state in
-            self.asyncSubscribe {
-                switch state {
-                case .available: return
-                case .waitForProcessing: return
-                case .busy: return
-                }
-            }
-        }
-        
-        self.observers.add(observer: observerDirector)
-    }
-    
-    private func asyncSubscribe(completion: @escaping F.Completion) {
-        DispatchQueue.background.async {
-            completion()
-        }
+    func subscribe() {
+        self.managerWashers.observer(handler: self.managerAccountant.processObject)
+        self.managerAccountant.observer(handler: self.managerDirector.processObject)
     }
 }
