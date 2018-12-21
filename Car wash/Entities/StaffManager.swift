@@ -10,13 +10,13 @@ import Foundation
 
 class StaffManager<Processed: MoneyGiver, ProcessableObject: Employee<Processed>>: ObservableObject<ProcessableObject> {
     
-    let processed = Queue<Processed>()
-    let processableObjects = Atomic([ProcessableObject]())
+    private let processedQueue = Queue<Processed>()
+    private let processableObjects = Atomic([ProcessableObject]())
     private var observers = Atomic([Staff.Observer]())
     
-//    private var elementsCountInQueue: Int {
-//        return self.processingQueue.count
-//    }
+    private var elementsCountInQueue: Int {
+        return self.processedQueue.count
+    }
     
     init(objects: [ProcessableObject]) {
         self.processableObjects.value = objects
@@ -28,13 +28,22 @@ class StaffManager<Processed: MoneyGiver, ProcessableObject: Employee<Processed>
         self.init(objects: [object])
     }
     
-    func processObject(_ object: Processed) {
+    public func processObject(_ object: Processed) {
         self.processableObjects.transform {
             let availableObject = $0.first { $0.state == .available }
-            if let availableObject = availableObject {
-                availableObject.processObject(object)
+            
+            if self.processedQueue.isEmpty {
+                if let availableObject = availableObject {
+                    if let queueObject = self.processedQueue.dequeue() {
+                        availableObject.process(queueObject)
+                    } else {
+                        availableObject.process(object)
+                    }
+                } else {
+                    self.processedQueue.enqueue(object)
+                }
             } else {
-                self.processed.enqueue(object)
+                self.processedQueue.enqueue(object)
             }
         }
     }
@@ -45,7 +54,7 @@ class StaffManager<Processed: MoneyGiver, ProcessableObject: Employee<Processed>
                 DispatchQueue.background.async {
                     switch state {
                     case .available:
-                        self?.processed.dequeue().apply(object?.processObject)
+                        self?.processedQueue.dequeue().apply(object?.process)
                     case .waitForProcessing:
                         object.apply(self?.notify)
                     case .busy: return

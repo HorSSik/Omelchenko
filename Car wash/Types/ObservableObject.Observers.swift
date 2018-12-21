@@ -20,7 +20,7 @@ extension ObservableObject {
             }
         }
         
-        func notify(state: Value) { // Need private func notify. Fix.
+        func notify(state: Value) {
             self.observers.modify {
                 $0 = $0.filter {
                     $0.isObserving
@@ -30,17 +30,5 @@ extension ObservableObject {
                 }
             }
         }
-        
-        public static func += (lhs: Observers, rhs: [Observer]) { // lhs: Observers and rhs: Observers
-            lhs.observers.modify {
-                $0 += rhs
-            }
-        }
-        
-//        static func += (lhs: Observers, rhs: Observers) {
-//            lhs.observers.modify {
-//                $0 += rhs.observers.value
-//            }
-//        }
     }
 }

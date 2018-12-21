@@ -34,19 +34,19 @@ class Employee<Processed: MoneyGiver>: Staff, Processable {
         self.init(name: name, queue: .background)
     }
 
-    func doWork(with object: Processed) {
+    open func doWork(with object: Processed) {
 
     }
 
-    func finishProcessing(with object: Processed) {
+    open func finishProcessing(with object: Processed) {
         
     }
     
-    func finishWork() {
+    open func finishWork() {
         self.state = .waitForProcessing
     }
     
-    func processObject(_ object: Processed) {
+    func process(_ object: Processed) {
         self.atomicState.modify {
             if $0 == .available {
                 $0 = .busy

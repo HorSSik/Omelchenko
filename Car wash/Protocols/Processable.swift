@@ -10,7 +10,7 @@ import Foundation
 
 protocol Processable {
     
-    associatedtype Processed: MoneyGiver
+    associatedtype Processed
     
-    func processObject(_ object: Processed)
+    func process(_ object: Processed)
 }

@@ -14,7 +14,8 @@ class WashService {
     private let managerAccountant: StaffManager<Washer, Accountant>
     private let managerDirector: StaffManager<Accountant, Director>
     
-    private let cars = Queue<Car>()
+    private var washerObserver = Atomic([StaffManager<Car, Washer>.Observer]())
+    private var accountantObserver = Atomic([StaffManager<Washer, Accountant>.Observer]())
     
     init(
         washers: [Washer],
@@ -31,8 +32,16 @@ class WashService {
         self.managerWashers.processObject(car)
     }
     
-    func subscribe() {
-        self.managerWashers.observer(handler: self.managerAccountant.processObject)
-        self.managerAccountant.observer(handler: self.managerDirector.processObject)
+    private func subscribe() {
+        let weakObserverWasher = self.managerWashers.observer(handler: self.managerAccountant.processObject)
+        let weakObserverAccountant = self.managerAccountant.observer(handler: self.managerDirector.processObject)
+        
+        self.washerObserver.modify {
+            $0.append(weakObserverWasher)
+        }
+        
+        self.accountantObserver.modify {
+            $0.append(weakObserverAccountant)
+        }
     }
 }

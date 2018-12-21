@@ -22,7 +22,7 @@ let washService = WashService(
 var factory = CarFactory(for: washService, interval: 5.0, queue: .background)
 
 factory.start()
-//sleep(7)
+//sleep(17)
 //factory.stop()
 
 RunLoop.current.run()
