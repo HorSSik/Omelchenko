@@ -29,6 +29,8 @@
 		3F55D4582189E10F000C4707 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F55D4572189E10F000C4707 /* Atomic.swift */; };
 		3F55D45A2189EE6B000C4707 /* NSLocking+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F55D4592189EE6B000C4707 /* NSLocking+Extensions.swift */; };
 		3F5753E2217DB37100ABA958 /* Optional+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F5753E1217DB37100ABA958 /* Optional+Extensions.swift */; };
+		3F62619321D0BD2000A4258B /* AbstractCancellableProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F62619221D0BD2000A4258B /* AbstractCancellableProperty.swift */; };
+		3F62619521D0C50700A4258B /* Cancellable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F62619421D0C50700A4258B /* Cancellable.swift */; };
 		3F78345521BFF351008E93E6 /* WashService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F78345421BFF351008E93E6 /* WashService.swift */; };
 		3F78345821BFF374008E93E6 /* Employee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F78345621BFF374008E93E6 /* Employee.swift */; };
 		3F78345921BFF374008E93E6 /* Staff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F78345721BFF374008E93E6 /* Staff.swift */; };
@@ -72,6 +74,8 @@
 		3F55D4572189E10F000C4707 /* Atomic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Atomic.swift; sourceTree = "<group>"; };
 		3F55D4592189EE6B000C4707 /* NSLocking+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSLocking+Extensions.swift"; sourceTree = "<group>"; };
 		3F5753E1217DB37100ABA958 /* Optional+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+Extensions.swift"; sourceTree = "<group>"; };
+		3F62619221D0BD2000A4258B /* AbstractCancellableProperty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbstractCancellableProperty.swift; sourceTree = "<group>"; };
+		3F62619421D0C50700A4258B /* Cancellable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cancellable.swift; sourceTree = "<group>"; };
 		3F78345421BFF351008E93E6 /* WashService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WashService.swift; sourceTree = "<group>"; };
 		3F78345621BFF374008E93E6 /* Employee.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Employee.swift; sourceTree = "<group>"; };
 		3F78345721BFF374008E93E6 /* Staff.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Staff.swift; sourceTree = "<group>"; };
@@ -99,6 +103,7 @@
 				3F19B0C321C3960000833F54 /* ObservableObject.swift */,
 				3F19B0C721C39CA600833F54 /* ObservableObject.Observer.swift */,
 				3F497CBC21CA87E100AE70FD /* ObservableObject.Observers.swift */,
+				3F62619221D0BD2000A4258B /* AbstractCancellableProperty.swift */,
 			);
 			path = Types;
 			sourceTree = "<group>";
@@ -146,6 +151,7 @@
 				3F26A5AB217F403400945E5F /* MoneyGiver.swift */,
 				3F78345A21BFF39F008E93E6 /* Stateable.swift */,
 				3F3AF1DB21CB8382006E8B28 /* Processable.swift */,
+				3F62619421D0C50700A4258B /* Cancellable.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -259,9 +265,11 @@
 				3F26A5AC217F403400945E5F /* MoneyGiver.swift in Sources */,
 				3F5753E2217DB37100ABA958 /* Optional+Extensions.swift in Sources */,
 				3F26A5AA217F401E00945E5F /* MoneyReceiver.swift in Sources */,
+				3F62619521D0C50700A4258B /* Cancellable.swift in Sources */,
 				3F78345521BFF351008E93E6 /* WashService.swift in Sources */,
 				3F3AF1DC21CB8382006E8B28 /* Processable.swift in Sources */,
 				3F262F372181BD0E00EEC14C /* RangeReplacebleCollection+Extensions.swift in Sources */,
+				3F62619321D0BD2000A4258B /* AbstractCancellableProperty.swift in Sources */,
 				3F55D4582189E10F000C4707 /* Atomic.swift in Sources */,
 				3F78345821BFF374008E93E6 /* Employee.swift in Sources */,
 				3F36C34F21805838003B8D55 /* DispatchTime+Extensions.swift in Sources */,

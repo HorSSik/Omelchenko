@@ -17,6 +17,8 @@ class WashService {
     private var washerObserver = Atomic([StaffManager<Car, Washer>.Observer]())
     private var accountantObserver = Atomic([StaffManager<Washer, Accountant>.Observer]())
     
+    private var cancelladObservers = CompositCancellableProperty()
+    
     init(
         washers: [Washer],
         accountant: Accountant,
@@ -33,15 +35,15 @@ class WashService {
     }
     
     private func subscribe() {
-        let weakObserverWasher = self.managerWashers.observer(handler: self.managerAccountant.processObject)
-        let weakObserverAccountant = self.managerAccountant.observer(handler: self.managerDirector.processObject)
-        
-        self.washerObserver.modify {
-            $0.append(weakObserverWasher)
+        let washerCancelladObserver = self.managerWashers.observer { washer in
+            self.managerAccountant.processObject(washer)
         }
         
-        self.accountantObserver.modify {
-            $0.append(weakObserverAccountant)
+        let accountantCancelladObserver = self.managerAccountant.observer { accountant in
+            self.managerDirector.processObject(accountant)
         }
+        
+        self.cancelladObservers.value = [washerCancelladObserver, accountantCancelladObserver]
     }
 }
+

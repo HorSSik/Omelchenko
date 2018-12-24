@@ -17,12 +17,16 @@ extension DispatchQueue {
     static var `default` = DispatchQueue.global(qos: .default)
     static var utility = DispatchQueue.global(qos: .utility)
     
-    class CancellationToken {
-        
+    class CancellationToken: Cancellable {
+
         let atomicToken = Atomic(true)
         
         var isRunning: Bool {
             return self.atomicToken.value
+        }
+        
+        var isCancelled: Bool {
+            return !self.isRunning
         }
         
         func cancel() {

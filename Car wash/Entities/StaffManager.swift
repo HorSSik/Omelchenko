@@ -12,7 +12,7 @@ class StaffManager<Processed: MoneyGiver, ProcessableObject: Employee<Processed>
     
     private let processedQueue = Queue<Processed>()
     private let processableObjects = Atomic([ProcessableObject]())
-    private var observers = Atomic([Staff.Observer]())
+    private let observers = CompositCancellableProperty()
     
     private var elementsCountInQueue: Int {
         return self.processedQueue.count
@@ -29,27 +29,15 @@ class StaffManager<Processed: MoneyGiver, ProcessableObject: Employee<Processed>
     }
     
     public func processObject(_ object: Processed) {
+        self.processedQueue.enqueue(object)
         self.processableObjects.transform {
             let availableObject = $0.first { $0.state == .available }
-            
-            if self.processedQueue.isEmpty {
-                if let availableObject = availableObject {
-                    if let queueObject = self.processedQueue.dequeue() {
-                        availableObject.process(queueObject)
-                    } else {
-                        availableObject.process(object)
-                    }
-                } else {
-                    self.processedQueue.enqueue(object)
-                }
-            } else {
-                self.processedQueue.enqueue(object)
-            }
+            availableObject.do { self.processedQueue.dequeue().apply($0.process) }
         }
     }
     
     private func subscribe() {
-        self.observers.value += self.processableObjects.value.map { object in
+        self.observers.value = self.processableObjects.value.map { object in
             let observers = object.observer { [weak self, weak object] state in
                 DispatchQueue.background.async {
                     switch state {
