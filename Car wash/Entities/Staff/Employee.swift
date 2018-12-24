@@ -47,15 +47,11 @@ class Employee<Processed: MoneyGiver>: Staff, Processable {
     }
     
     func process(_ object: Processed) {
-        self.atomicState.modify {
-            if $0 == .available {
-                $0 = .busy
-                self.queue.asyncAfter(deadline: .afterRandomInterval(in: range)) {
-                    self.doWork(with: object)
-                    self.finishProcessing(with: object)
-                    self.finishWork()
-                }
-            }
+        self.atomicState.value = .busy
+        self.queue.asyncAfter(deadline: .afterRandomInterval(in: range)) {
+            self.doWork(with: object)
+            self.finishProcessing(with: object)
+            self.finishWork()
         }
     }
 }
